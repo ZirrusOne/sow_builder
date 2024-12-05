@@ -5,7 +5,7 @@ frappe.ui.form.on('Quotation', {
     
     before_save: function (frm) {
         // Ensure each SoW Item in the child table is updated with its current description
-        frm.doc.sow_item.forEach(item => {
+        frm.doc.custom_sow_item.forEach(item => {
             const editor_control = editor_controls[item.name];
             if (editor_control) {
                 const description = editor_control.get_value();
@@ -14,20 +14,20 @@ frappe.ui.form.on('Quotation', {
         });
 
         // Refresh the child table field
-        frm.refresh_field('sow_item');
+        frm.refresh_field('custom_sow_item');
     },
 
     validate: function(frm) {
         // Ensure child table items are not lost during validation
-        frm.doc.sow_item = frm.doc.sow_item || [];
+        frm.doc.custom_sow_item = frm.doc.custom_sow_item || [];
     }
 });
 
 const editor_controls = {};
 
 function render_sow_items(frm) {
-    const container = frm.fields_dict.sow_items_html.$wrapper;
-    const sow_items = frm.doc.sow_item || [];
+    const container = frm.fields_dict.custom_sow_items_html.$wrapper;
+    const sow_items = frm.doc.custom_sow_item || [];
     container.empty();
 
     // Fetch all unique SoW Sections and order by `order` field
@@ -121,7 +121,7 @@ function append_sow_item(container, item, frm) {
             label: 'Description',
             default: '', // Initialize empty first, then explicitly set value below
             onchange: (value) => {
-                const existing_item = frm.doc.sow_item.find(i => i.name === item.name);
+                const existing_item = frm.doc.custom_sow_item.find(i => i.name === item.name);
                 if (existing_item) {
                     existing_item.description = value; // Update the description in the child table
                 }
@@ -158,7 +158,7 @@ function append_sow_item(container, item, frm) {
                 editor_control.set_input(description);
 
                 // Update the corresponding item in the child table
-                const existing_item = frm.doc.sow_item.find(i => i.name === item.name);
+                const existing_item = frm.doc.custom_sow_item.find(i => i.name === item.name);
                 if (existing_item) {
                     existing_item.description = description;
                 }
@@ -170,7 +170,7 @@ function append_sow_item(container, item, frm) {
     // Bind the delete button click event
     $(`#${delete_button_id}`).on('click', function () {
         const item_name = $(this).data('item');
-        frm.doc.sow_item = frm.doc.sow_item.filter(i => i.name !== item_name);
+        frm.doc.custom_sow_item = frm.doc.custom_sow_item.filter(i => i.name !== item_name);
         delete editor_controls[item_name]; // Remove the editor control reference
         render_sow_items(frm);
         frm.dirty();
@@ -182,7 +182,7 @@ function bind_delete_button(frm) {
         const item_name = $(this).data('item');
 
         // Remove the item from the child table
-        frm.doc.sow_item = frm.doc.sow_item.filter(item => item.name !== item_name);
+        frm.doc.custom_sow_item = frm.doc.custom_sow_item.filter(item => item.name !== item_name);
 
         // Re-render the SoW Items
         render_sow_items(frm);
@@ -194,12 +194,12 @@ function bind_delete_button(frm) {
 
 function create_sow_item(frm, section_name) {
     // Create a new child item in the SoW Items child table
-    const new_item = frappe.model.add_child(frm.doc, 'SoW Item', 'sow_item');
+    const new_item = frappe.model.add_child(frm.doc, 'SoW Item', 'custom_sow_item');
     new_item.sow_section = section_name; // Link the new item to the section
     new_item.description = ''; // Default empty description
 
     // Refresh the field to reflect changes in the child table
-    frm.refresh_field('sow_item');
+    frm.refresh_field('custom_sow_item');
 
     // Return the newly created item
     return new_item;
