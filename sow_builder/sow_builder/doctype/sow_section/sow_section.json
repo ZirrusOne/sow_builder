@@ -6,19 +6,28 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_name"
+  "section_name",
+  "order"
  ],
  "fields": [
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "section_name",
    "fieldtype": "Data",
    "label": "Section Name",
    "unique": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "order",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Order"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-05 07:54:48.614488",
+ "modified": "2024-12-05 09:06:19.639117",
  "modified_by": "Administrator",
  "module": "SoW Builder",
  "name": "SoW Section",
@@ -38,6 +47,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
