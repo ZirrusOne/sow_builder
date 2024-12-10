@@ -1,25 +1,31 @@
 frappe.ui.form.on('Quotation', {
     refresh: function(frm) {
-        render_sow_items(frm);
+        if (frm.doc.order_type == "Statement of Work") {
+            frm.set_df_property('scan_barcode', 'hidden', 1);
+            render_sow_items(frm);
+        }
     },
-    
     before_save: function (frm) {
-        // Ensure each SoW Item in the child table is updated with its current description
-        frm.doc.custom_sow_item.forEach(item => {
-            const editor_control = editor_controls[item.name];
-            if (editor_control) {
-                const description = editor_control.get_value();
-                item.description = description; // Save the rich text content
-            }
-        });
+        if (frm.doc.order_type == "Statement of Work") {
+            // Ensure each SoW Item in the child table is updated with its current description
+            frm.doc.custom_sow_item.forEach(item => {
+                const editor_control = editor_controls[item.name];
+                if (editor_control) {
+                    const description = editor_control.get_value();
+                    item.description = description; // Save the rich text content
+                }
+            });
 
-        // Refresh the child table field
-        frm.refresh_field('custom_sow_item');
+            // Refresh the child table field
+            frm.refresh_field('custom_sow_item');
+        }
     },
 
     validate: function(frm) {
-        // Ensure child table items are not lost during validation
-        frm.doc.custom_sow_item = frm.doc.custom_sow_item || [];
+        if (frm.doc.order_type == "Statement of Work") {
+            // Ensure child table items are not lost during validation
+            frm.doc.custom_sow_item = frm.doc.custom_sow_item || [];
+        }
     }
 });
 
