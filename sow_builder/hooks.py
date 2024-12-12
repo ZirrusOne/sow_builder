@@ -11,6 +11,14 @@ doctype_js = {
 
 fixtures = [
     {
+        "dt": "Property Setter",
+        "filters": [
+            [
+                "name", "in", ["Quotation-order_type-options"]
+            ]
+        ]
+    },
+    {
         "dt": "Print Format",
         "filters": [
             [
